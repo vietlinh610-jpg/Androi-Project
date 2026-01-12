@@ -1,0 +1,181 @@
+/* src/styles/Sidebar.css */
+
+/* 1. Container chính của Sidebar */
+.sidebar-container {
+    width: 250px;
+    min-width: 250px;
+    height: 100vh;
+    background-color: #ffffff;
+    border-right: 1px solid #e0e0e0;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    position: sticky;
+    top: 0;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+    z-index: 100;
+}
+
+/* 2. Phần Header của Sidebar (Tiêu đề & Logo) */
+.sidebar-header {
+    padding: 30px 10px;
+    text-align: center;
+    border-bottom: 1px solid #f0f0f0;
+    
+}
+
+
+.sidebar-divider {
+    border: 0;
+    height: 0.9px;
+    background-color: #e0e0e0; /* Màu xám nhạt */
+    margin: 20x auto 0 auto;  /* Cách trên 20px, căn giữa */
+    width: 100%;               /* Độ dài đường kẻ chiếm 80% chiều rộng sidebar */
+}
+
+.sidebar-title {
+    font-size: 14px;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing:2px;
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+
+.logo-section {
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: center;
+}
+
+.bluemoon-logo {
+    width: 110px;
+    height:110px;
+    border-radius: 50%;
+    object-fit: contain;
+    /* Hiệu ứng nổi vĩnh viễn cho logo */
+    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.2);
+    border: 2px solid #fff;
+}
+
+/* Khối bao quanh tên và chức vụ */
+.user-profile-box {
+    display: flex;
+    flex-direction: column;   /* Xếp tên trên, chức vụ dưới */
+    align-items: center;      /* Căn giữa theo chiều ngang */
+    justify-content: center;  /* Căn giữa theo chiều dọc */
+    padding: 10px 0;          /* Khoảng cách giữa chữ và đường kẻ */
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.user-name {
+    font-weight: bold;
+    font-size: 18px;
+    color: #333;
+}
+
+.user-role {
+    font-size: 16px;
+    color: #1d96e7; /* Màu xanh lá cho chức vụ */
+    font-weight: 500;
+}
+
+/* 3. Phần Navigation Menu */
+.sidebar-nav {
+    flex-grow: 1;
+    margin-top: 10px;
+}
+
+.sidebar-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Kiểu dáng cho các Menu chính (Trang chủ, Quản lý...) */
+.nav-link {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Căn giữa chữ giống hình mẫu */
+    padding: 15px 20px;
+    text-decoration: none;
+    color: #444;
+    font-weight: 500;
+    font-size: 15px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    position: relative;
+    border-left: 4px solid transparent; /* Tạo vạch màu bên trái khi active */
+}
+
+/* Hiệu ứng khi được chọn (Active) - Nền xám chữ xanh */
+.nav-link.active {
+    background-color: #f0f2f5; /* Nền xám nhạt */
+    color: #007bff;            /* Chữ màu xanh dương */
+    font-weight: 600;
+    border-left: 4px solid #007bff;
+}
+
+/* Hiệu ứng di chuột */
+.nav-link:hover {
+    background-color: #f8f9fa;
+    color: #007bff;
+}
+
+/* 4. Dropdown & Submenu */
+.dropdown-toggle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.arrow {
+    position: absolute;
+    right: 20px;
+    font-size: 11px;
+    transition: transform 0.3s;
+}
+
+.has-submenu.open .arrow {
+    transform: rotate(180deg); /* Xoay mũi tên lên khi mở */
+}
+
+.submenu {
+    background-color: #ffffff;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.has-submenu.open .submenu {
+    max-height: 500px; /* Độ cao tối đa khi mở */
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.submenu li a {
+    display: block;
+    padding: 12px 0;
+    text-align: center; /* Chữ menu con cũng nằm chính giữa */
+    color: #666;
+    text-decoration: none;
+    font-size: 14px;
+    transition: all 0.2s;
+}
+
+.submenu li a:hover {
+    color: #007bff;
+    background-color: #f1f1f1;
+}
+
+.arrow.rotate { transform: rotate(180deg); }
+
+/* Đảm bảo toàn bộ chữ trong sidebar là font không chân sạch sẽ */
+* {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}

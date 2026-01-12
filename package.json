@@ -1,0 +1,27 @@
+{
+  "name": "qldancu",
+  "version": "1.0.0",
+  "description": "<<<<<<< HEAD\r # Project-IT3180\r =======\r # React + Vite",
+  "main": "index.js",
+  "scripts": {
+    "setup": "npm install --prefix Backend && npm install --prefix Frontend",
+    "server": "npm start --prefix Backend",
+    "client": "npm run dev --prefix Frontend",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vietlinh610-jpg/Project-IT3180.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/vietlinh610-jpg/Project-IT3180/issues"
+  },
+  "homepage": "https://github.com/vietlinh610-jpg/Project-IT3180#readme",
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
