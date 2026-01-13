@@ -167,6 +167,7 @@ class MainActivity : AppCompatActivity(), WebViewListener {
         btnHome.visibility = View.GONE
         layoutProfile.visibility = View.VISIBLE
         onHideLoadingMask()
+        //webView.loadUrl("about:blank")
     }
 
     override fun onHideLoadingMask() {

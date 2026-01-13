@@ -179,7 +179,7 @@ class LoginActivity : AppCompatActivity() {
             btnLogin.isEnabled = false
             btnLogin.text = "ĐANG XỬ LÝ..."
         } else {
-            progressBar.visibility = View.GONE
+            progressBar.visibility = View.INVISIBLE
             btnLogin.isEnabled = true
             btnLogin.text = "ĐĂNG NHẬP"
         }

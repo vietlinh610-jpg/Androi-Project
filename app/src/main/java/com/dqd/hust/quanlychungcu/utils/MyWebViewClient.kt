@@ -7,7 +7,6 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 
-// Interface để giao tiếp ngược lại với MainActivity
 interface WebViewListener {
     fun onShowNativeDashboard()
     fun onHideLoadingMask()
@@ -24,45 +23,56 @@ class MyWebViewClient(
         handler?.proceed()
     }
 
+    // 1. Bắt sự kiện khi bấm Link chuyển trang (Click chủ động)
     override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
         val url = request?.url.toString()
         // Nếu Web lỡ bị đá về trang Login hoặc Dashboard -> Hiện Native App
-        if (url.contains("/login") || url.contains("/dashboard")) {
+        if (isDashboardOrLogin(url)) {
             listener.onShowNativeDashboard()
             return true
         }
         return false
     }
 
+    // 2. [MỚI - QUAN TRỌNG] Bắt sự kiện đổi URL của ReactJS (Bấm Back, History change)
+    // React đổi URL mà không load lại trang, hàm này sẽ bắt được
+    override fun doUpdateVisitedHistory(view: WebView?, url: String?, isReload: Boolean) {
+        super.doUpdateVisitedHistory(view, url, isReload)
+
+        if (url != null && isDashboardOrLogin(url)) {
+            // Nếu URL đổi về dashboard -> Bật giao diện Native ngay
+            listener.onShowNativeDashboard()
+        }
+    }
+
+    // 3. Xử lý khi trang đã load xong (Token injection) - Code cũ của bạn
     override fun onPageFinished(view: WebView?, url: String?) {
         super.onPageFinished(view, url)
+        //if (url == "about:blank") return
         CookieManager.getInstance().flush()
         val currentUrl = url ?: ""
-        val baseUrl = Constants.BASE_URL
 
-        // 1. LUÔN BƠM TOKEN
+        // 3.1. LUÔN BƠM TOKEN
         val token = sessionManager.getToken()
         val role = sessionManager.getRole()
-        val userId = sessionManager.getUserId()     // [MỚI]
-        val fullName = sessionManager.getFullName() // [MỚI]
+        val userId = sessionManager.getUserId()
+        val fullName = sessionManager.getFullName()
+
         if (token.isNotEmpty()) {
-            // Gọi hàm getAuthInjection với đủ 4 tham số
             view?.evaluateJavascript(
                 JavascriptScripts.getAuthInjection(token, role, userId, fullName),
                 null
             )
         }
 
-        // 2. Xử lý điều hướng
-        val isLoginPage = (currentUrl == baseUrl) || (currentUrl == "$baseUrl/") || currentUrl.contains("/login")
-        if (isLoginPage || currentUrl.contains("/dashboard")) {
+        // 3.2. Kiểm tra lại lần nữa nếu lỡ đang ở dashboard
+        if (isDashboardOrLogin(currentUrl)) {
             listener.onShowNativeDashboard()
             return
         }
 
-        // 3. Xử lý hiển thị trang chức năng (Khóa mục tiêu)
+        // 3.3. Xử lý logic ẩn Loading (Giữ nguyên logic của bạn)
         val targetLink = listener.getTargetLink()
-
         if (targetLink != null) {
             if (currentUrl.contains(targetLink)) {
                 injectJsUiFix(view)
@@ -70,7 +80,6 @@ class MyWebViewClient(
                 listener.onHideLoadingMask()
             }
         } else {
-            // Load tự do
             injectJsUiFix(view)
             listener.onHideLoadingMask()
         }
@@ -78,5 +87,13 @@ class MyWebViewClient(
 
     private fun injectJsUiFix(view: WebView?) {
         view?.evaluateJavascript(JavascriptScripts.DASHBOARD_FIX_UI, null)
+    }
+
+    // Hàm phụ trợ để kiểm tra link (Gọn code)
+    private fun isDashboardOrLogin(url: String): Boolean {
+        return url.contains("/login") ||
+                url.contains("/dashboard") ||
+                url == Constants.BASE_URL ||
+                url == "${Constants.BASE_URL}/"
     }
 }

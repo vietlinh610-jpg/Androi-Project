@@ -2,9 +2,8 @@ package com.dqd.hust.quanlychungcu.utils
 
 object JavascriptScripts {
 
-    // JS để bơm Token vào LocalStorage
+    // 1. Hàm Inject Token (Giữ nguyên, rất chuẩn)
     fun getAuthInjection(token: String, role: String, userId: String, fullName: String): String {
-        val userInfoJson = """{"id":"$userId","hoTen":"$fullName","quyen":"$role"}"""
         return """
             javascript:(function() {
                 localStorage.setItem('userToken', '$token');
@@ -15,40 +14,65 @@ object JavascriptScripts {
         """.trimIndent()
     }
 
-    // JS để sửa giao diện (ẩn sidebar, fix height...)
+    // 2. Hàm Fix UI (ĐÃ NÂNG CẤP)
+    // Sử dụng thẻ <style> để tự động thích nghi Dọc/Ngang
     val DASHBOARD_FIX_UI = """
         javascript:(function() { 
-            // 1. Ép Viewport
+            // A. Cấu hình Viewport (Bắt buộc để không bị Zoom nhỏ xíu)
             var meta = document.querySelector('meta[name="viewport"]');
-            if (!meta) { meta = document.createElement('meta'); meta.name = 'viewport'; document.head.appendChild(meta); }
+            if (!meta) { 
+                meta = document.createElement('meta'); 
+                meta.name = 'viewport'; 
+                document.head.appendChild(meta); 
+            }
             meta.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no';
             
-            // 2. Ẩn Sidebar & Header
-            var sidebars = document.getElementsByClassName('sidebar-container');
-            if (sidebars.length > 0) sidebars[0].style.display = 'none';
-            var navs = document.getElementsByTagName('nav');
-            if (navs.length > 0) navs[0].style.display = 'none';
-            
-            // 3. Khóa chiều cao 100vh
-            document.documentElement.style.height = '100vh';
-            document.documentElement.style.width = '100vw';
-            document.documentElement.style.overflow = 'hidden';
-            document.body.style.height = '100vh';
-            document.body.style.overflow = 'hidden';
-
-            // 4. Bật cuộn cho nội dung chính
-            var root = document.getElementById('root') || document.body.firstElementChild;
-            if(root) {
-                root.style.height = '100%';
-                root.style.overflowY = 'auto';
+            // B. Tạo thẻ CSS Style (Đây là chìa khóa xử lý xoay màn hình)
+            var css = `
+                /* --- CẤU HÌNH CHUNG --- */
+                /* Ẩn Sidebar và Header của Web gốc */
+                .sidebar-container, nav, header { display: none !important; }
                 
-                var main = document.getElementsByTagName('main');
-                if(main.length > 0) { 
-                    main[0].style.marginLeft = '0'; 
-                    main[0].style.width = '100%';
-                    main[0].style.height = '100%';
+                /* Đẩy nội dung chính ra full màn hình */
+                main { margin-left: 0 !important; width: 100% !important; padding: 10px !important; }
+                
+                /* Reset margin body */
+                body { margin: 0; padding: 0; width: 100vw; }
+
+                /* --- TRƯỜNG HỢP 1: MÀN HÌNH DỌC (PORTRAIT) --- */
+                /* Khóa cuộn body, chỉ cuộn nội dung bên trong (Trải nghiệm giống App) */
+                @media (orientation: portrait) {
+                    html, body {
+                        height: 100vh;
+                        overflow: hidden; /* Không cho cuộn cả trang */
+                    }
+                    #root, .App {
+                        height: 100%;
+                        overflow-y: auto; /* Cho phép cuộn nội dung bên trong */
+                        -webkit-overflow-scrolling: touch; /* Cuộn mượt trên mobile */
+                    }
                 }
-            }
+
+                /* --- TRƯỜNG HỢP 2: MÀN HÌNH NGANG (LANDSCAPE) --- */
+                /* Mở khóa chiều cao để nội dung dàn trải, cuộn bình thường */
+                @media (orientation: landscape) {
+                    html, body {
+                        height: auto; /* Chiều cao tự do theo nội dung */
+                        overflow-y: auto; /* Cho phép cuộn cả trang */
+                    }
+                    #root, .App {
+                        height: auto;
+                        overflow: visible;
+                    }
+                }
+            `;
+
+            // C. Bơm CSS vào trang
+            var style = document.createElement('style');
+            style.type = 'text/css';
+            style.appendChild(document.createTextNode(css));
+            document.head.appendChild(style);
+
         })()
     """.trimIndent()
 }
