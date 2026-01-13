@@ -1,0 +1,6 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/nav_home" android:title="Trang chủ" android:icon="@android:drawable/ic_menu_compass"/>
+    <item android:id="@+id/nav_residents" android:title="Danh sách dân cư" android:icon="@android:drawable/ic_menu_my_calendar"/>
+    <item android:id="@+id/nav_payment" android:title="Thanh toán" android:icon="@android:drawable/ic_menu_send"/>
+    <item android:id="@+id/nav_settings" android:title="Cài đặt" android:icon="@android:drawable/ic_menu_preferences"/>
+</menu>

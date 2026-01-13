@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Quản Lý Chung Cư</string>
+    <string name="navigation_drawer_open">Mở menu</string>
+    <string name="navigation_drawer_close">Đóng menu</string>
+    <string name="account"> Tên đăng nhập</string>
+    <string name="password">Mật khẩu</string>
+    <string name="login">Đăng nhập</string>
+    <string name="remember">Ghi nhớ đăng nhập</string>
+    <string name="system_login">Đăng nhập hệ thống</string>
+    <string name="back_to_home">Về trang chủ</string>
+    <string name="dashboard_header">CHUNG CƯ RED SUN</string>
+</resources>
