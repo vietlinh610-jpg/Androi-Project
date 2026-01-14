@@ -49,6 +49,11 @@ class DashboardUiManager(
             R.drawable.gui_xe, "/quan-ly-gui-xe",
             listOf("admin")
         ),
+        DashboardItem(
+            "Quản lý tài khoản", "Quản lý tài khoản, đăng ký tài khoản",
+            R.drawable.ic_acc, "/quan-ly-tai-khoan",
+            listOf("admin")
+        ),
 
         // --- NHÓM DÙNG CHUNG (ADMIN + KETOAN) ---
         DashboardItem(

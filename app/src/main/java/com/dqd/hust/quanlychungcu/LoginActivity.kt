@@ -33,6 +33,7 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_login)
 
         sessionManager = SessionManager(this)
@@ -81,22 +82,29 @@ class LoginActivity : AppCompatActivity() {
 
         etUsername.setAdapter(adapter)
 
-        // [QUAN TRỌNG 1] Đặt ngưỡng là 1 (hoặc 0 ở một số phiên bản Android cũ)
-        // Tuy nhiên dòng này chỉ là phụ trợ, quan trọng là bước dưới
+        // Đặt ngưỡng là 1 để gõ 1 chữ là hiện (hoặc chạm vào là hiện)
         etUsername.threshold = 1
 
-        // [QUAN TRỌNG 2] Bắt sự kiện Focus (Khi người dùng chạm vào ô lần đầu)
-        etUsername.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus && !isFinishing) {
-                // Ép hiển thị danh sách ngay lập tức
-                etUsername.showDropDown()
+        // [QUAN TRỌNG - ĐÃ SỬA LỖI]
+        // Dùng view.post để đảm bảo Window đã sẵn sàng trước khi showDropDown
+        etUsername.setOnFocusChangeListener { view, hasFocus ->
+            if (hasFocus) {
+                view.post {
+                    // Kiểm tra kỹ Activity còn sống không
+                    if (!isFinishing && !isDestroyed) {
+                        etUsername.showDropDown()
+                    }
+                }
             }
         }
 
-        // [QUAN TRỌNG 3] Bắt sự kiện Click (Khi ô đang được chọn mà người dùng bấm thêm lần nữa)
-        etUsername.setOnClickListener {
-            // Ép hiển thị danh sách
-            etUsername.showDropDown()
+        // [SỰ KIỆN CLICK]
+        etUsername.setOnClickListener { view ->
+            view.post {
+                if (!isFinishing && !isDestroyed) {
+                    etUsername.showDropDown()
+                }
+            }
         }
     }
 
